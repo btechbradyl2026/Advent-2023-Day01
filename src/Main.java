@@ -1,7 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -23,103 +27,142 @@ public class Main {
     }
 
     public static int getPartOneNumber(String line) {
-        int one = 0;
-        int two = 0;
-        boolean found = false;
-        boolean found2 = false;
-        while (!found) {
-            for (int i = 0; i < line.length(); i ++) {
-                if (isInt(line.substring(i, i + 1))) {
-                    one = Integer.parseInt(line.substring(i, i + 1));
-                    found = true;
-                    i = line.length() - 1;
+        int gameNum = 0;
+        String temp = line.substring(5,7);
+        gameNum = Integer.parseInt(temp.substring(0,1));
+        if (isInt(temp.substring(1,2))) {
+            gameNum = Integer.parseInt(temp);
+        }
+        if (line.substring(5,8).equals("100")) {
+            gameNum = 100;
+        }
+        line = line.substring(7);
+        int green = 0;
+        int red = 0;
+        int blue = 0;
+
+        String[] games = line.split(";");
+
+        for (int i = 0; i < games.length; i ++) {
+            String[] nums = games[i].split(",");
+            for (int j = 0; j < nums.length; j ++) {
+                if (nums[j].contains("green")) {
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(nums[j]);
+
+                    // Extract integers
+                    List<Integer> n = new ArrayList<>();
+                    while (matcher.find()) {
+                        n.add(Integer.parseInt(matcher.group()));
+                    }
+                    green = n.get(0);
+                } else if (nums[j].contains("blue")) {
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(nums[j]);
+
+                    // Extract integers
+                    List<Integer> n = new ArrayList<>();
+                    while (matcher.find()) {
+                        n.add(Integer.parseInt(matcher.group()));
+                    }
+                    blue = n.get(0);
+                } else if (nums[j].contains("red")) {
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(nums[j]);
+
+                    // Extract integers
+                    List<Integer> n = new ArrayList<>();
+                    while (matcher.find()) {
+                        n.add(Integer.parseInt(matcher.group()));
+                    }
+                    red = n.get(0);
                 }
-                if (i == line.length() - 1) {
-                    found = true;
+                if (red > 12) {
+                    return 0;
+                }
+                if (green > 13) {
+                    return 0;
+                }
+                if (blue > 14) {
+                    return 0;
                 }
             }
         }
-        while (!found2) {
-            for (int i = line.length(); i >= 1; i --) {
-                if (isInt(line.substring(i - 1, i))) {
-                    two = Integer.parseInt(line.substring(i - 1, i));
-                    found2 = true;
-                    i = 1;
-                }
-                if (i == 1) {
-                    found2 = true;
-                }
-            }
-        }
 
-        String fin = "" + one + two;
 
-        int glorp = Integer.parseInt(fin);
-
-        return glorp;
+        return gameNum;
     }
 
     public static int getPartTwoNumber(String line) {
-        int one = 0;
-        int two = 0;
-        boolean found = false;
-        boolean found2 = false;
-        while (!found) {
-            for (int i = 0; i < line.length(); i ++) {
-                if (isInt(line.substring(i, i + 1))) {
-                    one = Integer.parseInt(line.substring(i, i + 1));
-                    found = true;
-                    i = line.length() - 1;
-                } else if (i < line.length() - 3 && threeMatcher(line.substring(i, i + 3))) {
-                    one = threematch(line.substring(i, i + 3));
-                    found = true;
-                    i = line.length() - 1;
-                } else if (i < line.length() - 4 && fourMatcher(line.substring(i, i + 4))) {
-                    one = fourmatch(line.substring(i, i + 4));
-                    found = true;
-                    i = line.length() - 1;
-                } else if (i < line.length() - 5 && fiveMatcher(line.substring(i, i + 5))) {
-                    one = fivematch(line.substring(i, i + 5));
-                    found = true;
-                    i = line.length() - 1;
-                }
-                if (i == line.length() - 1) {
-                    found = true;
-                }
-            }
+        int gameNum = 0;
+        String temp = line.substring(5,7);
+        gameNum = Integer.parseInt(temp.substring(0,1));
+        if (isInt(temp.substring(1,2))) {
+            gameNum = Integer.parseInt(temp);
         }
-        while (!found2) {
-            for (int i = line.length(); i >= 1; i --) {
-                if (isInt(line.substring(i - 1, i))) {
-                    two = Integer.parseInt(line.substring(i - 1, i));
-                    found2 = true;
-                    i = 1;
-                } else if (i > 3 && threeMatcher(line.substring(i - 3, i))) {
-                    two = threematch(line.substring(i - 3, i));
-                    found2 = true;
-                    i = 1;
-                } else if (i > 4 && fourMatcher(line.substring(i - 4, i))) {
-                    two = fourmatch(line.substring(i - 4, i));
-                    found2 = true;
-                    i = 1;
-                } else if (i > 5 && fiveMatcher(line.substring(i - 5, i))) {
-                    two = fivematch(line.substring(i - 5, i));
-                    found2 = true;
-                    i = 1;
-                }
-                if (i == 1) {
-                    found2 = true;
-                }
-            }
+        if (line.substring(5,8).equals("100")) {
+            gameNum = 100;
         }
-        System.out.println("one: " + one);
-        System.out.println("two: " + two);
-        String fin = "" + one + two;
-        System.out.println(fin);
-        int glorp = Integer.parseInt(fin);
+        line = line.substring(7);
+        int green = 0;
+        int red = 0;
+        int blue = 0;
+        int maxGreen = 0;
+        int maxRed = 0;
+        int maxBlue = 0;
+        String[] games = line.split(";");
 
-        return glorp;
+        for (int i = 0; i < games.length; i ++) {
+            String[] nums = games[i].split(",");
+            for (int j = 0; j < nums.length; j ++) {
+                if (nums[j].contains("green")) {
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(nums[j]);
 
+                    // Extract integers
+                    List<Integer> n = new ArrayList<>();
+                    while (matcher.find()) {
+                        n.add(Integer.parseInt(matcher.group()));
+                    }
+                    green = n.get(0);
+                    if (green > maxGreen) {
+                        maxGreen = green;
+                    }
+                } else if (nums[j].contains("blue")) {
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(nums[j]);
+
+                    // Extract integers
+                    List<Integer> n = new ArrayList<>();
+                    while (matcher.find()) {
+                        n.add(Integer.parseInt(matcher.group()));
+                    }
+                    blue = n.get(0);
+                    if (blue > maxBlue) {
+                        maxBlue = blue;
+                    }
+
+                } else if (nums[j].contains("red")) {
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(nums[j]);
+
+                    // Extract integers
+                    List<Integer> n = new ArrayList<>();
+                    while (matcher.find()) {
+                        n.add(Integer.parseInt(matcher.group()));
+                    }
+                    red = n.get(0);
+                    if (red > maxRed) {
+                        maxRed = red;
+                    }
+                }
+
+            }
+
+        }
+
+        int power = maxBlue * maxRed * maxGreen;
+        return power;
     }
 
     public static ArrayList<String> getFileData(String fileName) {
@@ -148,68 +191,4 @@ public class Main {
             return false; // If parsing fails, it's not an integer
         }
     }
-
-    public static boolean threeMatcher (String gulp) {
-        if (gulp.equals("one")) {
-            return true;
-        } else if (gulp.equals("two")) {
-            return true;
-        } else if (gulp.equals("six")){
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean fourMatcher (String gulp) {
-        if (gulp.equals("four")) {
-            return true;
-        } else if (gulp.equals("five")) {
-            return true;
-        } else if (gulp.equals("nine")){
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean fiveMatcher (String gulp) {
-        if (gulp.equals("three")) {
-            return true;
-        } else if (gulp.equals("seven")) {
-            return true;
-        } else if (gulp.equals("eight")){
-            return true;
-        }
-        return false;
-    }
-
-    public static int threematch (String gulp) {
-        if (gulp.equals("one")) {
-            return 1;
-        } else if (gulp.equals("two")) {
-            return 2;
-        } else {
-            return 6;
-        }
-    }
-
-    public static int fourmatch (String gulp) {
-        if (gulp.equals("four")) {
-            return 4;
-        } else if (gulp.equals("five")) {
-            return 5;
-        } else {
-            return 9;
-        }
-    }
-
-    public static int fivematch (String gulp) {
-        if (gulp.equals("three")) {
-            return 3;
-        } else if (gulp.equals("seven")) {
-            return 7;
-        } else {
-            return 8;
-        }
-    }
-    
 }
